@@ -1,3 +1,7 @@
+/**
+ * 定义主体部分右侧内容容器
+ */
+
 import React, {Component, PropTypes} from 'react';
 import ShowLayer from './deskmark-content-show';
 import EditLayer from './deskmark-content-edit';
@@ -17,9 +21,10 @@ class DeskmarkBodyContent extends Component {
 
 	render() {
 		let {data, onSave, onCancel, onEdit, onDelete} = this.props;
-		// console.log(data);
+		// 根据是否处于编辑状态，返回不同内容
 		if(data.editing){
 			return (
+				/*	编辑子组件 */
 				<EditLayer 
 					onSave={onSave}
 					onCancel={onCancel}
@@ -28,6 +33,7 @@ class DeskmarkBodyContent extends Component {
 			);
 		} else {
 			return (
+				/* 展示子组件 */
 				<ShowLayer 
 					data={data}
 					onEdit={onEdit}

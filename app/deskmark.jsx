@@ -1,12 +1,13 @@
+/* 引入相应的包 */
 import React, { Component } from 'react';
-import uuid from 'uuid';
-import DeskmarkHeader from './deskmark-header.jsx';
+import uuid from 'uuid'; // 用于产生独一无二的id
+import DeskmarkHeader from './deskmark-header';
 import DeskmarkBody from './deskmark-body';
 import DeskmarkFooter from './deskmark-footer';
 
-// to
-
+/* 使用ES6语法创建Deskmark组件 */
 class Deskmark extends Component {
+	/* 构造函数，必须调用super方法，继承父函数的属性方法 */
 	constructor(...args){
 		super(...args);
 		this.state = {
@@ -15,6 +16,8 @@ class Deskmark extends Component {
 			editing: false,
 			currentNote: null
 		}
+
+		/* 绑定this,后期调用函数修改数据是Deskmark中的数据 */
 		this.onCreate = this.onCreate.bind(this);
 		this.onSelect = this.onSelect.bind(this);
 		this.onSave = this.onSave.bind(this);
@@ -26,23 +29,51 @@ class Deskmark extends Component {
 	/**
 	 * 组件加载完成后，读取本地中的notes数据
 	 */
-	// componentDidMount(){
-	// 	let notes = localStorage.getItem('notes');
-	// 	if(!!notes){
-	// 		this.setState({
-	// 			notes: localStorage.getItem('notes').split('')
-	// 		});
-	// 	}
-	// }
+	componentDidMount(){
+		/* 本地存储数据格式为：数组中每一个元素件间‘;’隔开
+							对象中每隔属性间用‘@@’隔开
+							属性中键值间用‘=>’隔开
+		*/
+		let data = localStorage.getItem('notes');
+		let notesStrArr = data.split(';');
+		let notes = [];
+		notesStrArr.forEach(function (note) {
+			let itemArr = note.split('@@');
+			let obj = {};
+			itemArr.splice(0, 1);
+			for (let i = 0; i < itemArr.length; ++i){
+				let [key, value] = itemArr[i].split('=>');
+				obj[key] = value;
+			}
+			notes.push(obj);
+		})
+
+		if(!!notes){
+			this.setState({
+				notes: notes
+			});
+		}
+	}
 
 	
 
 	/**
-	 * 将notes数据存放到本地
+	 * 	每次组件更新后，将notes数据存放到本地
 	 */
-	// componentDidUpdate(){
-	// 	localStorage.setItem('notes', this.state.notes);
-	// }
+	componentDidUpdate(){
+		let notes = this.state.notes;
+		var arr=[];
+		notes.forEach(function (note) {
+			let str = 'app.jsx';
+			for(let key in note){
+				str += '@@' + key + '=>' + note[key];
+			}
+			arr.push(str);
+		});
+		
+		localStorage.setItem('notes', arr.join(';'));
+		
+	}
 
 	/**
 	 * 新建日记
@@ -112,12 +143,20 @@ class Deskmark extends Component {
 		});
 	}
 
+	/**
+	 * 展示模式下，切换为编辑模式
+	 * @param  {object} note 当前显示的笔记对象
+	 */
 	onEdit(note){
 		this.setState({
 			editing: true
 		});
 	}
 
+	/**
+	 * 删除当前展示的日记对象	
+	 * @param  {sting} id 笔记对象唯一标识
+	 */
 	onDelete(id){
 		let notes = this.state.notes;
 		notes.forEach((note, index) => {
@@ -127,18 +166,19 @@ class Deskmark extends Component {
 				this.setState({
 					notes: notes,
 					selectId: null,
-					// editing: false,
 					currentNote: null,
 				});
 			}
 		})
 	}
 
+	/* 每一个组件必须有一个render函数，返回JSX */
 	render(){
-		// console.log(this.state);
 		return (
 			<div className="deskmark-note">
+				{/* 文档头 */}
 				<DeskmarkHeader head="Deskmark" subhead="Record Your Life" />
+				{/* 文档主体 */}
 				<DeskmarkBody
 					data={this.state}
 					onCreate={this.onCreate}
@@ -148,6 +188,7 @@ class Deskmark extends Component {
 					onEdit={this.onEdit}
 					onDelete={this.onDelete}
 					/>
+				{/* 文档尾 */}
 				<DeskmarkFooter />
 			</div>
 		);
@@ -155,4 +196,5 @@ class Deskmark extends Component {
 	
 };
 
+/* 采用ES6导出方法 */
 export default Deskmark;

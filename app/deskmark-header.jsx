@@ -1,5 +1,5 @@
 /**
- * 
+ * 文档头部组件定义
  */
 import React, {PropTypes} from 'react';
 

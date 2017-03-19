@@ -1,4 +1,8 @@
+/**
+ * 定义编辑组件
+ */
 import React, {PropTypes, Component} from 'react';
+/* 转换markDown语法 */
 import marked from 'marked';
 
 const propTypes = {
@@ -20,10 +24,9 @@ class EditLayer extends Component {
 			title: '',
 			content: ''
 		};
-		console.log(item);
 
+		/* 使用refs对象中获取表单中的值 */
 		let save = () => {
-			// console.log(marked(this.refs.content.value));
 			onSave({
 				time: item.time,
 				id: item.id,

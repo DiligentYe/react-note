@@ -1,3 +1,6 @@
+/**
+ * 定义展示组件
+ */
 import React, {PropTypes, Component} from 'react';
 
 const propTypes = {
@@ -14,8 +17,8 @@ class ShowLayer extends Component {
 	render(){
 		let {data, onEdit, onDelete} = this.props;
 
+		/* 根据是否选中日记，返回不同的内容 */
 		if(data.selectId){
-			// console.log(onDelete);
 			return (
 				<div className="col-xs-9 deskmark-content">
 		                <div className="clearfix top">
